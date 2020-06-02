@@ -1,0 +1,173 @@
+#libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statistics as st
+import seaborn as sns
+import statsmodels.api as sm
+
+df = pd.read_csv('C:\\Users\\XX\\Desktop\\XXX.csv', sep=";" )
+df.info()
+
+#DATA SPLIT
+
+CAO = df.iloc[:,-1].values
+print(CAO) 
+Cikis_AO = pd.DataFrame(data = CAO, index= range(180), columns = ['CAO'])
+df.drop(['Cikis_Alan_Ortalama'], axis=1, inplace=True)
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(df,Cikis_AO,
+                                                    test_size=0.33, 
+                                                    random_state=0)
+x_train.shape, y_train.shape
+x_test.shape, y_test.shape
+
+######Feature Selection with Importance
+####backward elimination
+# beta değerini 1 yapma
+#◘ones: An array created from 1 is created.
+
+# building the optimal model using backward elimination
+# SL = 0.05 and eliminating those features which have p > SL
+
+
+CAO_array = Cikis_AO.to_numpy()
+X = np.append(arr = np.ones((180,1)).astype(int), values = df, axis = 1)
+X_l = df.iloc[:,0:40].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+
+df.info()
+# ♥ # 13 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,23,24,25,26,27,28,29,
+              30,31,32,33,34,35,36,37,38,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,23,24,25,26,27,28,
+              30,31,32,33,34,35,36,37,38,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,23,24,25,26,27,28,
+              30,31,32,34,35,36,37,38,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,23,24,25,26,27,28,
+              30,31,32,34,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23 çıkarılır
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,24,25,26,27,28,
+              30,31,32,34,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,24,25,26,27,28,
+              30,31,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,17,18,19,20,21,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,18,19,20,21,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,18,20,21,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21 çıkarılır
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,18,20,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,15,
+              16,18,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20,15 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,
+              16,18,22,24,25,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20,15,25 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,
+              16,18,22,24,26,27,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20,15,25,27 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,
+              16,18,22,24,26,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20,15,25,27,16 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,
+              18,22,24,26,28,
+              30,32,35,36,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
+# ♥ # 13, 29, 33, 38, 23, 34, 31, 17, 19, 21,20,15,25,27,16,36 removed
+X_l = df.iloc[:,[0,1,2,3,4,5,6,7,8,9,10,11,12,14,
+              18,22,24,26,28,
+              30,32,35,37,39]].values
+r_ols_model = sm.OLS(endog = CAO_array,
+                     exog  = X_l)
+r = r_ols_model.fit()
+print(r.summary())
