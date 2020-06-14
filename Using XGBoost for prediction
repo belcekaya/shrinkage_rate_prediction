@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+
+#libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statistics as st
+import seaborn as sns
+from matplotlib import pyplot 
+import xgboost as xgb
+
+from sklearn.model_selection import train_test_split
+
+modeldevsample, modeltestsample = train_test_split(df,test_size=0.30, random_state=0)
+
+modeldevsample.shape, modeltestsample.shape
+df  = df.iloc[:,0:16]
+df.shape
+features = df.columns
+
+import scipy
+from scipy.sparse import csr_matrix
+# modeldevsample.drop('Cikis_Alan_Ortalama',axis=1,inplace=True)
+
+sparse_train = scipy.sparse.csr_matrix(modeldevsample.iloc[:,0:16])
+label_train  = modeldevsample.iloc[:,-1].values
+dense_train  = xgb.DMatrix(sparse_train, label=label_train,feature_names=features)
+
+sparse_test = scipy.sparse.csr_matrix(modeltestsample.iloc[:,0:16])
+label_test  = modeltestsample.iloc[:,-1].values
+dense_test  = xgb.DMatrix(sparse_test, label=label_test, feature_names=features)
+
+estimator = XGBModel(objective= 'reg:linear',
+                     nthread=4,
+                     seed=12345
+                     )
+
+grid_param_xgb = [{'max_depth': range (2, 10, 1),
+                   'n_estimators': range(60, 300, 40),
+                   'learning_rate': [0.05,0.01,0.1,0.3],
+                   'gamma': [0,0.3,0.6,1],
+                   'booster': ['gbtree', 'dart']
+                 }]
+
+grid_search = GridSearchCV(estimator=estimator,
+                           param_grid=grid_param_xgb,
+                           scoring = 'neg_root_mean_squared_error',
+                           n_jobs = 20,
+                           cv = 10,
+                           verbose=True
+                           )
+
+grid_search.fit(sparse_train,label_train)
+
+grid_search.best_estimator_
+grid_search.best_params_
+
+xgb_params = {'booster': 'gbtree',
+              'gamma': 0.6,
+              'learning_rate': 0.1,
+              'max_depth': 4,
+              'n_estimators': 260,
+              'objective':'reg:linear'
+              }
+
+xgb_params['eval_metric'] = "rmse"
+evallist = [(dense_test, 'eval'), (dense_train, 'train')]
+num_round = 5000
+bst = xgb.train(xgb_params, dense_train, num_round, evallist,early_stopping_rounds=10)
+
+bst.save_model('1.model')
+
+#prediction
+ypred = bst.predict(dense_test, ntree_limit=bst.best_ntree_limit)
+
+ypred.shape, label_test.shape
+
+ypred_train = bst.predict(dense_train, ntree_limit=bst.best_ntree_limit)
+
+
+
+
