@@ -10,26 +10,24 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt 
 
-# Step 3: Computing Kendall correlogram
+# Step 2: Computing Kendall correlogram
 corr = df.corr(method='kendall') 
 
 #define the threshold for high correlation
 threshold = 0.70
 print(np.where(corr > 0.70))
 
-######## Kendall Correlogram ######
-
-#arrange your plot size according to your big data
+# Arrange your plot size according to your big data
 f, ax = plt.subplots(figsize=(50, 50)) 
 
-#define your color palette for correlation matrix
+# Define your color palette for correlation matrix
 cmap="RdYlBu" #you can also define different color palettes for your heatmap which are available in python like cmap="BrBG".
 
-# Step 4: Selecting palettes
+# Selecting palettes
 pal = sns.color_palette("RdGy_r") # for Spearman correlogram reversed color palette
 cmap2 =pal # for Spearman correlogram 
 
-# Step 5: Drawing the correlogram heatmap for Kendall correlogram
+# Drawing the correlogram heatmap for Kendall correlogram
 
 sns.heatmap(corr, cmap=cmap, vmax=0.7,
             center=0, annot=True,
@@ -38,18 +36,16 @@ sns.heatmap(corr, cmap=cmap, vmax=0.7,
             linecolor='grey',
             cbar=True, mask=False, cbar_kws={"shrink":.5}, )
 
-# Step 6: Adding titles, adjusting subplots and labelling x/y ticks
-
+# Adding titles, adjusting subplots and labelling x/y ticks
 plt.title('Kendall Correlogram', fontsize=13, fontfamily='serif')
 
-#arrange size of variables name headers 
+# Arrange size of variables name headers 
 plt.subplots_adjust(bottom=0.20,top=0.90, right=0.90, left=0.10)
 plt.xticks(rotation=90, size=20)
 plt.yticks(rotation=360, size=20)
 plt.show() 
 
-
-######## Spearman correlogram  ######
+# Step 3: Computing Spearman correlogram
 
 corr2 = df.corr(method='spearman') # for Spearman correlogram
 
@@ -61,11 +57,11 @@ f, ax = plt.subplots(figsize=(50, 50))
 
 cmap="RdYlBu"
 
-# Step 4: Selecting palettes
+# Selecting palettes
 pal = sns.color_palette("RdGy_r") # for Spearman correlogram reversed color palette
 cmap2 =pal # for Spearman correlogram 
 
-# Step 5: Drawing the correlogram heatmap for spearman correlogram
+# Drawing the correlogram heatmap for spearman correlogram
 
 sns.heatmap(corr2, cmap=cmap, vmax=0.7, center=0, annot=True,
             annot_kws={"size":30}, #size of the numbers inside of the correlation matrix cells
@@ -83,7 +79,7 @@ plt.yticks(rotation=360, size=35)
 plt.show() 
 
 
-######pearson correlogram with corrcoef function
+# # Step 4: Pearson correlogram with corrcoef function
 
 x = np.array(df)
 cor_mat = np.corrcoef(x.T)
@@ -101,7 +97,7 @@ sns.heatmap(cor_mat_df, cmap=cmap, vmax=0.7,
             linecolor='grey',
             cbar=True, mask=False, cbar_kws={"shrink":.5}, )
             
-# Step 6: Adding titles, adjusting subplots and labelling x/y ticks
+# Adding titles, adjusting subplots and labelling x/y ticks
 
 plt.title('Pearson Correlogram',
 fontsize=50, fontfamily='serif')
