@@ -1,10 +1,10 @@
-# Scatter Plot
-x =  label_test # you just need to define your actual test sample
-y =  ypred # predicted values of output
-
 from plotnine import *
 from plotnine.data import *
 %matplotlib inline
+
+# Scatter Plot
+x =  label_test # you just need to define your actual test sample
+y =  ypred # predicted values of output
 
 (
     ggplot(modeltestsample, aes(x, y))
